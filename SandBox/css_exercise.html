@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://npmcdn.com/vue/dist/vue.js" xmlns:v-model="http://www.w3.org/1999/xhtml"></script>
+</head>
+<body>
+<div id="exercise">
+  <!-- 1) Start the Effect with the Button. The Effect should alternate the "highlight" or "shrink" class on each new setInterval tick (attach respective class to the div with id "effect" below) -->
+  <div>
+    <button @click="startEffect">Start Effect</button>
+    <div id="effect" :class="currentCSSClass"></div>
+  </div>
+  <!-- 2) Create a couple of CSS classes and attach them via the array syntax -->
+  <div :class="['upperCase', 'borders', 'otherStuff']">Awesome styles</div>
+  <!-- 3) Let the user enter a class (create some example classes) and attach it -->
+  <div class="mt-2">
+    <label for="third_task" class="w-100">Please input b-maroon, b-dodgerblue, b-gray(default), or b-none</label>
+    <input type="text" id="third_task" v-model="third_task_class" :class="third_task_class">
+    <div></div>
+  </div>
+  <!-- 4) Let the user enter a class and enter true/ false for another class (create some example classes) and attach the classes -->
+  <div class="mt-2" >
+    <label for="prop" class="w-100">Enter CSS class(highlight or b-maroon):</label>
+    <input id="prop" type="text" v-model="fourth_task_styles_key">
+    <br>
+    <label for="switcher" class="w-100">and true or false:</label>
+    <input id="switcher" v-model="fourth_task_styles_value" type="text">
+    <div :class="fourth_task_styles">target div</div>
+  </div>
+  <!-- 5) Repeat 3) but now with values for styles (instead of class names). Attach the respective styles.  -->
+  <div class="mt-2">
+    <label for="fifth_task" class="w-100">enter style property and value:</label>
+    <input id="fifth_task" type="text" v-model="fifthStyle" >
+    <div :style="fifthStyle">Dynamic styling</div>
+  </div>
+  <!-- 6) Create a simple progress bar with setInterval and style bindings. Start it by hitting the below button. -->
+  <div class="mt-2">
+    <button @click="startProgress = true">Start Progress</button>
+    <div v-html="progressTxt" :style="{width: progressBar + 'px', backgroundColor: '#333'}"></div>
+  </div>
+</div>
+
+<script>
+  new Vue({
+    el: "#exercise",
+    data: {
+      currentCSSClass: "",
+      effectActive: false,
+      third_task_class: "b-gray",
+      fourth_task_styles: {},
+      fourth_task_styles_key: '',
+      fourth_task_styles_value: '',
+      fifthStyle: '',
+      startProgress: false,
+      progressBar: 0,
+      progressTxt: '&nbsp;'
+    },
+    watch: {
+      effectActive: function() {
+        setInterval(() => {
+          this.currentCSSClass === "highlight" ?
+            this.currentCSSClass = "shrink" : this.currentCSSClass = "highlight";
+        }, 300);
+      },
+
+      startProgress: function() {
+        if (!this.startProgress) return;
+        this.progressBar = 10;
+        this.progressTxt = '&nbsp;';
+        const id = setInterval(() => {
+          this.progressBar += 10;
+          if (this.progressBar === 200){
+            console.log(id);
+            clearInterval(id);
+            this.startProgress = false;
+            this.progressTxt = 'DONE!'
+          }
+        },200);
+
+      },
+
+      /*looks a bit complicated :((*/
+      fourth_task_styles_key: function(){
+        this.setStyle();
+      },
+      fourth_task_styles_value: function(){
+        this.setStyle();
+      },
+
+    },
+    methods: {
+      startEffect: function() {
+        this.currentCSSClass = "highlight";
+        this.effectActive = true;
+      },
+      setStyle: function() {
+        if (this.fourth_task_styles_value !== "true" && this.fourth_task_styles_value !== "false")
+          return;
+
+        if (this.fourth_task_styles_key === 'highlight' || this.fourth_task_styles_key === 'b-maroon')
+          this.fourth_task_styles[this.fourth_task_styles_key] = this.fourth_task_styles_value === "true" ? true : false;
+        console.log(this.fourth_task_styles);
+      }
+    }
+  });
+</script>
+
+<style>
+  #effect {
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+  }
+
+  .highlight {
+    background-color: red;
+    width: 200px !important;
+  }
+
+  .shrink {
+    background-color: gray;
+    width: 50px !important;
+  }
+
+  .upperCase {
+    text-transform: uppercase;
+  }
+
+  .borders {
+    border-radius: 2px;
+    border: dodgerblue solid;
+  }
+
+  .otherStuff {
+    display: inline-block;
+    padding: .5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+  }
+
+  .w-100 {
+    display: block;
+  }
+
+  .b-gray {
+    border: dimgrey solid 4px;
+  }
+
+  .b-maroon {
+    border: maroon solid 4px;
+  }
+
+  .b-dodgerblue {
+    border: dodgerblue solid 4px;
+  }
+
+  .b-none {
+    border: none;
+  }
+
+  .mt-2{
+    margin-top: 2rem;
+  }
+
+</style>
+
+</body>
+</html>
+
+
+
