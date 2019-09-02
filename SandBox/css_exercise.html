@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
@@ -23,26 +23,53 @@
     <input type="text" id="third_task" v-model="third_task_class" :class="third_task_class">
     <div></div>
   </div>
+
+  <p>Teacher's approach</p>
+  <div>
+    <input type="text" v-model="userClass">
+    <div v-bind:class="[{visible: true}, userClass]"></div>
+  </div>
+
   <!-- 4) Let the user enter a class and enter true/ false for another class (create some example classes) and attach the classes -->
-  <div class="mt-2" >
+  <div class="mt-2">
     <label for="prop" class="w-100">Enter CSS class(highlight or b-maroon):</label>
     <input id="prop" type="text" v-model="fourth_task_styles_key">
     <br>
     <label for="switcher" class="w-100">and true or false:</label>
     <input id="switcher" v-model="fourth_task_styles_value" type="text">
     <div :class="fourth_task_styles">target div</div>
+
+
+    <!-- 5) Repeat 3) but now with values for styles (instead of class names). Attach the respective styles.  -->
+    <div class="mt-2">
+      <label for="fifth_task" class="w-100">enter style property and value:</label>
+      <input id="fifth_task" type="text" v-model="fifthStyle">
+      <div :style="fifthStyle">Dynamic styling</div>
+    </div>
+
+    <p>Teacher's approach</p>
+
+    <div>
+      <input type="text" v-model="teacherStyle.backgroundColor">
+      <div v-bind:style="teacherStyle"></div>
+    </div>
+
   </div>
-  <!-- 5) Repeat 3) but now with values for styles (instead of class names). Attach the respective styles.  -->
-  <div class="mt-2">
-    <label for="fifth_task" class="w-100">enter style property and value:</label>
-    <input id="fifth_task" type="text" v-model="fifthStyle" >
-    <div :style="fifthStyle">Dynamic styling</div>
-  </div>
+
   <!-- 6) Create a simple progress bar with setInterval and style bindings. Start it by hitting the below button. -->
   <div class="mt-2">
     <button @click="startProgress = true">Start Progress</button>
     <div v-html="progressTxt" :style="{width: progressBar + 'px', backgroundColor: '#333'}"></div>
   </div>
+
+
+  <div class="mt-2">
+    <button @click="teacherStartProgress">Start Progress</button>
+    <div :class="['progressBar']">
+      <div :style="progressBarStyle"></div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -53,12 +80,24 @@
       effectActive: false,
       third_task_class: "b-gray",
       fourth_task_styles: {},
-      fourth_task_styles_key: '',
-      fourth_task_styles_value: '',
-      fifthStyle: '',
+      fourth_task_styles_key: "",
+      fourth_task_styles_value: "",
+      fifthStyle: "",
       startProgress: false,
       progressBar: 0,
-      progressTxt: '&nbsp;'
+      progressTxt: "&nbsp;",
+
+      userClass: "",
+      teacherStyle: {
+        width: "100px",
+        height: "150px",
+        backgroundColor: "gray"
+      },
+      progressBarStyle: {
+        width: "0px",
+        height: "20px",
+        backgroundColor: "red"
+      }
     },
     watch: {
       effectActive: function() {
@@ -69,28 +108,29 @@
       },
 
       startProgress: function() {
+        //запускаем прогресс-бар только если он не работал до этого
         if (!this.startProgress) return;
         this.progressBar = 10;
-        this.progressTxt = '&nbsp;';
+        this.progressTxt = "&nbsp;";
         const id = setInterval(() => {
           this.progressBar += 10;
-          if (this.progressBar === 200){
+          if (this.progressBar === 200) {
             console.log(id);
             clearInterval(id);
             this.startProgress = false;
-            this.progressTxt = 'DONE!'
+            this.progressTxt = "DONE!";
           }
-        },200);
+        }, 200);
 
       },
 
       /*looks a bit complicated :((*/
-      fourth_task_styles_key: function(){
+      fourth_task_styles_key: function() {
         this.setStyle();
       },
-      fourth_task_styles_value: function(){
+      fourth_task_styles_value: function() {
         this.setStyle();
-      },
+      }
 
     },
     methods: {
@@ -102,15 +142,39 @@
         if (this.fourth_task_styles_value !== "true" && this.fourth_task_styles_value !== "false")
           return;
 
-        if (this.fourth_task_styles_key === 'highlight' || this.fourth_task_styles_key === 'b-maroon')
+        if (this.fourth_task_styles_key === "highlight" || this.fourth_task_styles_key === "b-maroon")
           this.fourth_task_styles[this.fourth_task_styles_key] = this.fourth_task_styles_value === "true" ? true : false;
         console.log(this.fourth_task_styles);
+      },
+      teacherStartProgress: function() {
+        let width = 0;
+
+
+        const id = setInterval(() => {
+          width += 10;
+          this.progressBarStyle.width = width + "px";
+          if (width === 200)
+            clearInterval(id);
+        }, 500);
       }
     }
   });
 </script>
 
 <style>
+
+  .progressBar {
+    width: 200px;
+    height: 20px;
+    border: 1px solid black;
+  }
+
+  .visible {
+    width: 100px;
+    height: 50px;
+    background-color: #eee;
+  }
+
   #effect {
     width: 100px;
     height: 100px;
@@ -164,7 +228,7 @@
     border: none;
   }
 
-  .mt-2{
+  .mt-2 {
     margin-top: 2rem;
   }
 
