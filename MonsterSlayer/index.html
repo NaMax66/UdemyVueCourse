@@ -14,7 +14,8 @@
       <div class="healthbar">
 
         <!--binding dynamic health bar for the player-->
-        <div class="healthbar text-center" :style="{width: playerHealth + '%'}"
+        <div class="healthbar text-center"
+             :style="{width: playerHealth + '%'}"
              style="background-color: green; margin: 0; color: white;">
           {{ playerHealth }}
         </div>
@@ -25,7 +26,8 @@
       <div class="healthbar">
 
         <!--binding dynamic health bar for the monster-->
-        <div class="healthbar text-center" :style="{width: monsterHealth + '%'}"
+        <div class="healthbar text-center"
+             :style="{width: monsterHealth + '%'}"
              style="background-color: green; margin: 0; color: white;">
           {{ monsterHealth }}
         </div>
@@ -49,12 +51,13 @@
       <button id="give-up" @click="giveUp">GIVE UP</button>
     </div>
   </section>
-  <section v-if='isStarted' class="row log">
+  <section v-if='messages.length > 0' class="row log">
     <div class="small-12 columns">
       <ul>
 
         <!--check turn. set needed style-->
         <li v-for="message in messages" :class="message.isPlayerTurn ? 'player-turn' : 'monster-turn'">
+          <!--teacher: :class="{'player-tern: message.isPlayerTurn, 'monster-turn': !message.isPlayerTurn}" -->
           {{message.title}}
         </li>
       </ul>
@@ -80,6 +83,7 @@
     computed: {
       //health
     },
+
     watch: {
 
       isPlayerTurn: function() {
@@ -91,8 +95,13 @@
         /*wait until monster will finish its attack*/
         setTimeout(() => {
           //monster attack logic
-          const damage = Math.round(Math.random() * 30) + 1;
+          const damage = Math.round(Math.random() * 9) + 1;
           this.playerHealth -= damage;
+
+          //teacher's approach
+          //var max = Math.floor(Math.random() * 10) + 1; //10 excluded. It gives number between 1 and 10
+          //var min = 3;
+          //var damage2 = Math.max(max, min);
 
           this.addMessage({ title: "Monster hits player for " + damage, isPlayerTurn: this.isPlayerTurn });
           this.isPlayerTurn = true;
@@ -116,16 +125,20 @@
         //if it is not the player turn we do nothing
         if (!this.isPlayerTurn) return;
 
+        let title = "Player hits monster for ";
+
         //player attack logic
-        let multiplier = 10;
-        if (attackType === "special")
-          multiplier = 15;
+        let multiplier = 9;
+        if (attackType === "special"){
+          multiplier = 14;
+          title = "Player hits monster HARD for ";
+        }
 
         //damage calculating
         const damage = Math.round(Math.random() * multiplier) + 1;
         this.monsterHealth -= damage;
 
-        this.addMessage({ title: "Player hits monster for " + damage, isPlayerTurn: this.isPlayerTurn });
+        this.addMessage({ title: title + damage, isPlayerTurn: this.isPlayerTurn });
         this.isPlayerTurn = false;
         //random attack calc
         //End game pop up message
@@ -141,12 +154,18 @@
       },
 
       heal: function() {
-        if (this.playerHealth === 100)
+        if (this.playerHealth >= 100)
           return;
 
         //healing
-        const addHeal = Math.round(Math.random() * 12);
+        const addHeal = Math.round(Math.random() * 11)+1;
+
         this.playerHealth += addHeal;
+
+        //max health is 100
+        if (this.playerHealth > 100)
+          this.playerHealth = 100;
+
         this.addMessage({ title: "Player heals himself for " + addHeal, isPlayerTurn: this.isPlayerTurn });
         this.isPlayerTurn = false;
       },
