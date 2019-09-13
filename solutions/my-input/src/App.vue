@@ -2,27 +2,17 @@
   <div class="container">
     <form>
       <div class="row">
-        <!-- Exercise 3 -->
-        <AppFullName v-if="submitted"
-                    v-model="fullName"/>
+
 
         <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3" v-if="!submitted">
+          <h3>Please enter your info</h3>
+
+          <!-- Exercise 3 -->
+
+          <AppFullName v-model="fullName"/>
 
           <!-- Exercise 1 -->
-          <h3>Please enter your info</h3>
-          <div class="form-group">
-            <label for="first-name">First Name</label>
-            <input type="text"
-                   id="first-name"
-                   v-model="firstName">
 
-          </div>
-          <div class="form-group">
-            <label for="last-name">Last Name</label>
-            <input type="text"
-                   id="last-name"
-                   v-model="lastName">
-          </div>
           <div class="form-group">
             <label for="mail">E-Mail</label>
             <input type="text"
@@ -66,7 +56,7 @@
             <h4>Your Data</h4>
           </div>
           <div class="panel-body">
-            <p>Full Name: {{firstName}} {{lastName}}</p>
+            <p>Full Name: {{fullName}}</p>
             <p>Mail: {{email}}</p>
             <p>Password: {{password}}</p>
             <p>Store in Database?: {{isDataStored}}</p>

@@ -1,35 +1,46 @@
 <template>
-  <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3" style="margin-top: 5rem">
+  <div>
     <div class="form-group">
       <label for="first-name">First Name</label>
       <input type="text"
              id="first-name"
-             v-model="firstName"
-             @change="changeData">
+             :value="firstName"
+             @input="changeData(true, $event)">
     </div>
 
     <div class="form-group">
       <label for="last-name">Last Name</label>
       <input type="text"
              id="last-name"
-             v-model="lastName"
-             @change="changeData">
+             :value="lastName"
+             @input="changeData(false, $event)">
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    data() {
-      return {
-        firstName: "",
-        lastName: ""
+    props: ['value'],
+    computed: {
+      firstName() {
+        //default value will be '' if undefined
+        return this.value.split(' ')[0] || ''
+      },
+      lastName() {
+        return this.value.split(' ')[1] || ''
       }
     },
-    props: ['value'],
     methods: {
-      changeData() {
-        this.$emit('input', this.firstName + ' ' + this.lastName);
+      changeData(isFirst, event) {
+        let name = '';
+        if (isFirst) {
+          name = event.target.value + ' ' + this.lastName;
+        }
+        else {
+          name = this.firstName + ' ' + event.target.value;
+        }
+        this.value = name;
+        this.$emit('input', this.value);
       }
     }
   }
