@@ -19,11 +19,9 @@ Vue.directive('highlight', {
         el.style.color = binding.value;
       }
     }, delay);
-
-
   }
 });
 new Vue({
   el: '#app',
   render: h => h(App)
-})
+});
