@@ -11,18 +11,23 @@
         </ul>
         <p v-if="filteredFruits.length === 0"
            style="color: #bdbdbd">Nothing to show</p>
+
+        <hr>
+        <AppList />
       </div>
+
     </div>
   </div>
 </template>
 
 <script>
+  import AppList from "./AppList.vue";
+  import {fruitMixin} from "./fruitMixin";
   export default {
+    name: 'App',
     data() {
       return {
         text: 'Hello vue!',
-        fruits: ['Apple', 'Banana', 'Mango', 'Melon'],
-        filterText: ''
       }
     },
     filters: {
@@ -30,13 +35,12 @@
         return txt.toUpperCase();
       }
     },
-    computed: {
-      /*nice way to make filter*/
-      filteredFruits() {
-        return this.fruits.filter( el => {
-          return el.match(this.filterText);
-        })
-      }
+    mixins: [fruitMixin],
+    components: {
+      AppList
+    },
+    created() {
+      console.log('Inside App');
     }
 
   };
