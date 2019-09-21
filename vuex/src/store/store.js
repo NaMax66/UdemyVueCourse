@@ -48,4 +48,7 @@ export const store = new Vuex.Store({
             },payload.duration)
         }
     }
+
+    //Узнать про модули, шаблонизаторы PUG
+
 });
