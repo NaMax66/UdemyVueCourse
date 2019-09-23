@@ -7,6 +7,7 @@
 
 <script>
     import {mapGetters} from 'vuex'
+    import * as types from '../store/types'
 
     export default {
         /* props: ['counter']*/
@@ -19,16 +20,17 @@
                 return this.$store.getters.stringCounter
             }*!/
 
-
         },*/
 
         /*mapGetters is an object, so we should us the spread operator to add another props
         * but we need to install babel-preset-stage-2*/
+
+        //new way here https://github.com/vuejs/vuex/releases/tag/v2.1.0
         computed: {
-            ...mapGetters([
-                'doubleCounter',
-                'stringCounter'
-            ]),
+            ...mapGetters({
+                doubleCounter: types.DOUBLE_COUNTER,
+                stringCounter: types.CLICK_COUNTER
+            }),
             myOwn() {
 
             }

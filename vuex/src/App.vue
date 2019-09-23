@@ -9,6 +9,10 @@
                 <app-counter></app-counter>
                 <hr>
                 <AnotherCounter />
+                <hr>
+                <!--<input type="text" :value="value" @input="updateValue">-->
+                <input type="text" v-model="value">
+                <p>{{value}}</p>
             </div>
         </div>
     </div>
@@ -21,6 +25,24 @@
     import AnotherCounter from "./components/AnotherCounter.vue";
 
     export default {
+
+        computed: {
+            value: {
+                /*return this.$store.getters.value;*/
+                get() {
+                    return this.$store.getters.value
+                },
+                set(value) {
+                    this.$store.dispatch('updateValue', value)
+                }
+            }
+        },
+
+        methods: {
+            updateValue(event){
+                this.$store.dispatch('updateValue', event.target.value)
+            }
+        },
 
         components: {
             appCounter: Counter,
