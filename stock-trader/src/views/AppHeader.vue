@@ -33,8 +33,12 @@
             >End Day</b-nav-item>
 
             <b-nav-item-dropdown text="Save & Load" right>
-              <b-dropdown-item href="#">Save</b-dropdown-item>
-              <b-dropdown-item href="#">Load</b-dropdown-item>
+              <b-dropdown-item href="#"
+                               @click="saveMyState"
+              >Save</b-dropdown-item>
+              <b-dropdown-item href="#"
+                               @click="loadMyState"
+              >Load</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
@@ -49,11 +53,26 @@
     name: "AppHeader",
     methods: {
       ...mapActions([
-        'randomizeStocks'
+        'randomizeStocks',
+        'loadData'
       ]),
 
       endDay(){
         this.randomizeStocks();
+      },
+
+      saveMyState() {
+        const data = {
+          funds: this.$store.getters.funds,
+          stockPortfolio: this.$store.getters.stockPortfolio,
+          stocks: this.$store.getters.stocks
+        };
+
+        this.$http.put('data.json', data);
+      },
+
+      loadMyState() {
+        this.loadData();
       },
 
       isActive(route){
