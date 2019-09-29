@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import App from './App.vue'
-
+import Vuelidate from "vuelidate";
 import router from './router'
 import store from './store'
 import axios from 'axios'
 
+Vue.use(Vuelidate);
 axios.defaults.baseURL = 'https://vuejs-http-8d08f.firebaseio.com';
 
 //I can add my own headers

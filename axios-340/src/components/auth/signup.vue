@@ -2,32 +2,41 @@
   <div id="signup">
     <div class="signup-form">
       <form @submit.prevent="onSubmit">
-        <div class="input">
+        <div class="input" :class="{invalid: $v.email.$error}">
           <label for="email">Mail</label>
+          <!--$v - validation prop. Touch - key method-->
           <input
                   type="email"
                   id="email"
+                  @blur="$v.email.$touch()"
                   v-model="email">
+          <p v-if="!$v.email.email">Please provide a valid e-mail address</p>
+          <p v-if="!$v.email.required">This field must not ve empty</p>
         </div>
-        <div class="input">
+        <div class="input" :class="{invalid: $v.age.$error}">
           <label for="age">Your Age</label>
           <input
                   type="number"
                   id="age"
+                  @blur="$v.age.$touch()"
                   v-model.number="age">
+          <p v-if="!$v.age.minVal">You have to be at least {{ $v.age.$params.minVal.min }} years old.</p>
         </div>
-        <div class="input">
+        <div class="input" :class="{invalid: $v.password.$error}">
           <label for="password">Password</label>
           <input
                   type="password"
                   id="password"
+                  @blur="$v.password.$touch()"
                   v-model="password">
         </div>
-        <div class="input">
+        <div class="input" :class="{invalid: $v.confirmPassword.$error}">
           <label for="confirm-password">Confirm Password</label>
           <input
                   type="password"
                   id="confirm-password"
+                  @blur="$v.confirmPassword.$touch()"
+
                   v-model="confirmPassword">
         </div>
         <div class="input">
@@ -69,7 +78,7 @@
 </template>
 
 <script>
-  import axios from '../../axios-auth'
+  import { required, email, numeric, minValue, minLength, sameAs } from 'vuelidate/lib/validators'
   export default {
     data () {
       return {
@@ -82,6 +91,31 @@
         terms: false
       }
     },
+
+    //Vuelidate prop
+    validations: {
+      email: {
+        required,
+        email
+      },
+      age: {
+        required,
+        numeric,
+        minVal: minValue(18) //it is a function
+      },
+      password: {
+        required,
+        minLen: minLength(6)
+      },
+      confirmPassword: {
+        //sameAs: sameAs('password',)
+        sameAs: sameAs(vm => {
+          //we can use it to add something
+          return vm.password
+        })
+      }
+    },
+
     methods: {
       onAddHobby () {
         const newHobby = {
@@ -196,4 +230,14 @@
     color: #ccc;
     cursor: not-allowed;
   }
+
+  .input.invalid label {
+    color: red;
+  }
+
+  .input.invalid input {
+    border: 1px solid red;
+    background-color: #ffc9aa;
+  }
+
 </style>
